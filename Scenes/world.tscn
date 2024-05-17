@@ -1,0 +1,61 @@
+[gd_scene load_steps=9 format=3 uid="uid://eri1fla55hog"]
+
+[ext_resource type="Script" path="res://Scripts/World.gd" id="1_4xm16"]
+[ext_resource type="Script" path="res://Scripts/CameraTD.gd" id="1_wc6tx"]
+[ext_resource type="PackedScene" uid="uid://ydk6nhkfy6tx" path="res://Scenes/vortex.tscn" id="3_n35ef"]
+[ext_resource type="PackedScene" uid="uid://dahx450qvqrmm" path="res://Scenes/platform.tscn" id="4_cdn70"]
+[ext_resource type="PackedScene" uid="uid://c8afymuw0tn0l" path="res://Scenes/player.tscn" id="5_rh6cb"]
+[ext_resource type="Script" path="res://Scripts/UserInterface.gd" id="6_h6ddv"]
+
+[sub_resource type="Environment" id="Environment_140w6"]
+background_mode = 1
+ambient_light_source = 2
+ambient_light_color = Color(0.363179, 0.3521, 0.330929, 1)
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_sdkfv"]
+
+[node name="World" type="Node3D"]
+script = ExtResource("1_4xm16")
+platforms = Array[PackedScene]([ExtResource("4_cdn70")])
+offset = 2
+vortex_scene = ExtResource("3_n35ef")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_140w6")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 73.7051, 0)
+light_energy = 3.605
+
+[node name="Camera3D2" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 73.211, 0)
+projection = 1
+current = true
+fov = 26.0
+size = 43.868
+script = ExtResource("1_wc6tx")
+
+[node name="Player" parent="." instance=ExtResource("5_rh6cb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
+
+[node name="UserInterface" type="Control" parent="." node_paths=PackedStringArray("score_label")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_h6ddv")
+score_label = NodePath("ScoreLabel")
+
+[node name="ScoreLabel" type="RichTextLabel" parent="UserInterface"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.219
+anchor_bottom = 0.044
+offset_left = 8.0
+offset_right = -128.512
+offset_bottom = -23.36
+text = "Score:  0"
+fit_content = true
+custom_effects = [SubResource("RichTextEffect_sdkfv")]

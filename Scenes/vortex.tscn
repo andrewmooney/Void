@@ -1,0 +1,81 @@
+[gd_scene load_steps=11 format=3 uid="uid://ydk6nhkfy6tx"]
+
+[ext_resource type="Script" path="res://Scripts/Vortex.gd" id="1_5gjee"]
+[ext_resource type="Shader" uid="uid://b3ofm554x2r4f" path="res://Scenes/bhole.tres" id="2_y6m1j"]
+[ext_resource type="Shader" uid="uid://co4400oc2wqy3" path="res://Scenes/vortex.tres" id="3_suq7n"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_nasuf"]
+height = 0.113677
+radius = 2.25252
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_shtb4"]
+height = 0.0826992
+radius = 2.03972
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_26t1q"]
+render_priority = 0
+shader = ExtResource("2_y6m1j")
+shader_parameter/Colour_Intensity = 7.0
+shader_parameter/Polar_Colour = Color(0.142355, 0.600341, 0.780071, 1)
+shader_parameter/Speed_X_Y = Vector2(0.5, 0.2)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oyray"]
+render_priority = 0
+next_pass = SubResource("ShaderMaterial_26t1q")
+shader = ExtResource("3_suq7n")
+shader_parameter/ColorParameter = null
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bok5d"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_olu5u"]
+material = SubResource("StandardMaterial3D_bok5d")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_fgbcf"]
+radius = 2.4293
+
+[node name="Vortex" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.203, 0, -4.321)
+collision_layer = 2
+collision_mask = 31
+axis_lock_linear_y = true
+axis_lock_angular_y = true
+script = ExtResource("1_5gjee")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 31
+gravity_point = true
+gravity_point_center = Vector3(0, 0, 0)
+gravity_direction = Vector3(0, 0, 0)
+gravity = 100.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("CylinderShape3D_nasuf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CylinderShape3D_shtb4")
+
+[node name="VFXBlackHole" type="Node3D" parent="."]
+
+[node name="Vortex" type="MeshInstance3D" parent="VFXBlackHole"]
+transform = Transform3D(2.28911, 0, 0, 0, 1, 0, 0, 0, 2.2375, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_oyray")
+mesh = SubResource("PlaneMesh_olu5u")
+skeleton = NodePath("../../..")
+
+[node name="GravityWell" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 29
+gravity_space_override = 3
+gravity_point = true
+gravity_point_unit_distance = 10.0
+gravity_point_center = Vector3(0, 0, 0)
+gravity_direction = Vector3(0, 0, 0)
+gravity = 32.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GravityWell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.733217, 0)
+shape = SubResource("SphereShape3D_fgbcf")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

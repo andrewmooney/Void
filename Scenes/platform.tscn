@@ -1,0 +1,119 @@
+[gd_scene load_steps=10 format=3 uid="uid://dahx450qvqrmm"]
+
+[ext_resource type="Script" path="res://Scripts/Platform.gd" id="1_rhg81"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_myrl6"]
+albedo_color = Color(0.457814, 0.039732, 0.368044, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dle2a"]
+material = SubResource("StandardMaterial3D_myrl6")
+size = Vector3(3, 0.5, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xr7o8"]
+size = Vector3(3, 0.533203, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_43feg"]
+size = Vector3(2.87891, 0.277832, 2.82751)
+
+[sub_resource type="Animation" id="Animation_o8x6n"]
+resource_name = "Flash"
+
+[sub_resource type="Animation" id="Animation_m508f"]
+resource_name = "Stretch"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:mesh:size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(3, 0.5, 3), Vector3(1, 4.5, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MeshInstance3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -1.94224, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_fjcol"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:mesh:size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(3, 0.5, 3)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MeshInstance3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qm57q"]
+_data = {
+"Flash": SubResource("Animation_o8x6n"),
+"RESET": SubResource("Animation_fjcol"),
+"Stretch": SubResource("Animation_m508f")
+}
+
+[node name="Platform" type="RigidBody3D" node_paths=PackedStringArray("timer", "animation_player") groups=["Platforms"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+collision_layer = 16
+collision_mask = 19
+mass = 50.0
+gravity_scale = 0.0
+lock_rotation = true
+freeze = true
+script = ExtResource("1_rhg81")
+timer = NodePath("Timer")
+animation_player = NodePath("AnimationPlayer")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_dle2a")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." groups=["Platforms"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0166016, 0)
+shape = SubResource("BoxShape3D_xr7o8")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 1.5
+one_shot = true
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0488281, 0.270244, -0.0658569)
+shape = SubResource("BoxShape3D_43feg")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_qm57q")
+}
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
