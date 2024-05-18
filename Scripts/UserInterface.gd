@@ -9,6 +9,8 @@ var default_score_increment: int = 1
 var score_increment: int
 var current_score: int = 0
 var multiplier_active: bool = false
+var high_score: int = 0
+
 
 func _ready() -> void:
 	score_increment = default_score_increment
@@ -17,17 +19,23 @@ func _ready() -> void:
 	Signals.connect("dash_energy_level", dash_level)
 	Signals.connect("item_collected", score_multiplier)
 	
+	
 func score_multiplier(item: String):
 	multiplier_active = true
 	score_increment *= 3
 	timer.wait_time = 5
 	timer.start()
 
+
 func update_score(body) -> void:
 	current_score += score_increment
 	print("Current score: ", current_score)
 	print("Current multiplier: ", multiplier_active)
 	score_label.text = str("Score:  ", current_score)
+	if current_score > high_score:
+		high_score = current_score
+		print("New high score: ", high_score)
+
 
 func jump_enabled(double_jump: bool):
 	jump_label.text  = "Double Jump Active"
@@ -35,6 +43,7 @@ func jump_enabled(double_jump: bool):
 		jump_label.hide()
 		return
 	jump_label.show()
+	
 	
 func dash_level(dash_energy: float):
 	dash_progress.value = dash_energy
