@@ -1,0 +1,39 @@
+[gd_resource type="VisualShader" load_steps=3 format=3 uid="uid://bp5nxyp8dwd2e"]
+
+[sub_resource type="VisualShaderNodeColorParameter" id="VisualShaderNodeColorParameter_uoxon"]
+parameter_name = "ColorParameter"
+
+[sub_resource type="VisualShaderNodeColorParameter" id="VisualShaderNodeColorParameter_byaw3"]
+parameter_name = "ColorParameter2"
+
+[resource]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+uniform vec4 ColorParameter : source_color;
+uniform vec4 ColorParameter2 : source_color;
+
+
+
+void fragment() {
+// ColorParameter:2
+	vec4 n_out2p0 = ColorParameter;
+
+
+// ColorParameter:3
+	vec4 n_out3p0 = ColorParameter2;
+
+
+// Output:0
+	ALBEDO = vec3(n_out2p0.xyz);
+	EMISSION = vec3(n_out3p0.xyz);
+
+
+}
+"
+nodes/fragment/0/position = Vector2(1540, 20)
+nodes/fragment/2/node = SubResource("VisualShaderNodeColorParameter_uoxon")
+nodes/fragment/2/position = Vector2(820, 100)
+nodes/fragment/3/node = SubResource("VisualShaderNodeColorParameter_byaw3")
+nodes/fragment/3/position = Vector2(700, 380)
+nodes/fragment/connections = PackedInt32Array(2, 0, 0, 0, 3, 0, 0, 5)

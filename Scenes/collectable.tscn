@@ -1,0 +1,73 @@
+[gd_scene load_steps=9 format=3 uid="uid://qwyh7q4m8426"]
+
+[ext_resource type="Script" path="res://Scripts/Collectable.gd" id="1_eh7x1"]
+[ext_resource type="Shader" uid="uid://bp5nxyp8dwd2e" path="res://Shaders/collectable.tres" id="2_w845v"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_aogkm"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_if7wu"]
+render_priority = 0
+shader = ExtResource("2_w845v")
+shader_parameter/ColorParameter = Color(0, 0.579166, 0.595622, 1)
+shader_parameter/ColorParameter2 = Color(0.00124943, 0.453927, 0.60212, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_un6bw"]
+material = SubResource("ShaderMaterial_if7wu")
+
+[sub_resource type="Animation" id="Animation_3mxwu"]
+resource_name = "CollectableRotate"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0.785398, 0, 0.785398), Vector3(0.785398, 6.28319, 0.785398)]
+}
+
+[sub_resource type="Animation" id="Animation_1sd76"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.785398, 0, 0.785398)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7ujdx"]
+_data = {
+"CollectableRotate": SubResource("Animation_3mxwu"),
+"RESET": SubResource("Animation_1sd76")
+}
+
+[node name="Collectable" type="Node3D" node_paths=PackedStringArray("animation_player")]
+transform = Transform3D(0.707107, -0.707107, 0, 0.5, 0.5, -0.707107, 0.5, 0.5, 0.707107, 0, 14.296, 0)
+script = ExtResource("1_eh7x1")
+animation_player = NodePath("AnimationPlayer")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 32
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_aogkm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_un6bw")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_7ujdx")
+}
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

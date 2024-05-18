@@ -5,6 +5,7 @@ const dash_energy_max: float = 100.0
 var jump_velocity: float = 5.0
 
 @export var debug: bool = false
+@export var freelook: bool = false
 
 var speed: float = 5.0
 
@@ -18,7 +19,11 @@ var double_jump: bool = true
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
+func _ready() -> void:
+	Signals.connect("item_collected", new_item_collected)
+
 func _physics_process(delta: float) -> void:
+	Signals.emit_signal("double_jump_enabled", double_jump)
 	#print("Dash energy: ", dash_energy)
 	# Add the gravity.
 	if not is_on_floor():
@@ -30,6 +35,8 @@ func _physics_process(delta: float) -> void:
 	
 	if debug:
 		test_input()
+		
+	
 
 	move_and_slide()
 
@@ -57,17 +64,25 @@ func process_input(delta: float) -> void:
 		
 	if direction:
 		velocity.x = direction.x * speed
-		#velocity.z = direction.z * speed
+		if freelook:
+			velocity.z = direction.z * speed
 	else:
 		velocity.x = move_toward(velocity.x, 0, speed)
-		#velocity.z = move_toward(velocity.z, 0, speed)
+		if freelook:
+			velocity.z = move_toward(velocity.z, 0, speed)
 	
-#func _input(event: InputEvent) -> void:
-	#if event is InputEventMouseMotion:
-		#spring_arm.rotation.x += event.relative.y * -0.005
-		#spring_arm.rotation.y -= event.relative.x * 0.005
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion and freelook:
+		spring_arm.rotation.x += event.relative.y * -0.005
+		spring_arm.rotation.y -= event.relative.x * 0.005
+		
+func new_item_collected(type: String) -> void:
+	if type == "jump_fuel":
+		double_jump = true
+		dash_energy = 100.0
 
 func dash_recharge() -> void:
+	Signals.emit_signal("dash_energy_level", dash_energy)
 	if dash_energy <= 0:
 		dash_enabled = false
 	

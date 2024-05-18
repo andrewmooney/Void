@@ -1,22 +1,27 @@
-[gd_scene load_steps=9 format=3 uid="uid://eri1fla55hog"]
+[gd_scene load_steps=11 format=3 uid="uid://eri1fla55hog"]
 
 [ext_resource type="Script" path="res://Scripts/World.gd" id="1_4xm16"]
 [ext_resource type="Script" path="res://Scripts/CameraTD.gd" id="1_wc6tx"]
+[ext_resource type="PackedScene" uid="uid://qwyh7q4m8426" path="res://Scenes/collectable.tscn" id="3_8548h"]
 [ext_resource type="PackedScene" uid="uid://ydk6nhkfy6tx" path="res://Scenes/vortex.tscn" id="3_n35ef"]
 [ext_resource type="PackedScene" uid="uid://dahx450qvqrmm" path="res://Scenes/platform.tscn" id="4_cdn70"]
 [ext_resource type="PackedScene" uid="uid://c8afymuw0tn0l" path="res://Scenes/player.tscn" id="5_rh6cb"]
 [ext_resource type="Script" path="res://Scripts/UserInterface.gd" id="6_h6ddv"]
+[ext_resource type="Shader" uid="uid://0dhhei7svxis" path="res://Shaders/dashprogress.tres" id="7_kwjb1"]
 
 [sub_resource type="Environment" id="Environment_140w6"]
 background_mode = 1
 ambient_light_source = 2
 ambient_light_color = Color(0.363179, 0.3521, 0.330929, 1)
 
-[sub_resource type="RichTextEffect" id="RichTextEffect_sdkfv"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2ywtf"]
+shader = ExtResource("7_kwjb1")
+shader_parameter/ColorParameter = Color(0, 0.603543, 0.227222, 1)
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_4xm16")
 platforms = Array[PackedScene]([ExtResource("4_cdn70")])
+collectables = Array[PackedScene]([ExtResource("3_8548h")])
 offset = 2
 vortex_scene = ExtResource("3_n35ef")
 
@@ -37,25 +42,56 @@ script = ExtResource("1_wc6tx")
 
 [node name="Player" parent="." instance=ExtResource("5_rh6cb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
+debug = false
 
-[node name="UserInterface" type="Control" parent="." node_paths=PackedStringArray("score_label")]
+[node name="UserInterface" type="Control" parent="." node_paths=PackedStringArray("score_label", "jump_label", "dash_progress", "timer")]
 layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 120.0
+grow_horizontal = 2
+size_flags_vertical = 3
+script = ExtResource("6_h6ddv")
+score_label = NodePath("HBoxContainer/ScoreLabel")
+jump_label = NodePath("HBoxContainer/JumpEnabled")
+dash_progress = NodePath("HBoxContainer/DashProgressBar")
+timer = NodePath("Timer")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UserInterface"]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("6_h6ddv")
-score_label = NodePath("ScoreLabel")
 
-[node name="ScoreLabel" type="RichTextLabel" parent="UserInterface"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 0.219
-anchor_bottom = 0.044
-offset_left = 8.0
-offset_right = -128.512
-offset_bottom = -23.36
+[node name="ScoreLabel" type="RichTextLabel" parent="UserInterface/HBoxContainer"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 text = "Score:  0"
 fit_content = true
-custom_effects = [SubResource("RichTextEffect_sdkfv")]
+
+[node name="Boost" type="Label" parent="UserInterface/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Boost"
+
+[node name="DashProgressBar" type="ProgressBar" parent="UserInterface/HBoxContainer"]
+material = SubResource("ShaderMaterial_2ywtf")
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+rounded = true
+
+[node name="JumpEnabled" type="RichTextLabel" parent="UserInterface/HBoxContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+size_flags_vertical = 0
+text = "Double Jump Active"
+
+[node name="Timer" type="Timer" parent="UserInterface"]
+wait_time = 5.0
+one_shot = true
+
+[connection signal="timeout" from="UserInterface/Timer" to="UserInterface" method="_on_timer_timeout"]

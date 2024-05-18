@@ -1,7 +1,8 @@
 extends Node3D
 
-@export_category("Platform")
+@export_category("Collectables")
 @export var platforms: Array[PackedScene]
+@export var collectables: Array[PackedScene]
 @export var initial_number_platforms: int = 5
 @export var offset: int = 5
 @export var x_range: Vector2i = Vector2i(-20, 20)
@@ -19,11 +20,11 @@ var previous_platform_position: Vector3
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var level: int = 1
 var platforms_destroyed: int = 0;
+var first_spawn: bool = true
 
 func _ready() -> void:
-	
 	Signals.connect("platform_destroyed", remove_platform)
-	Signals.connect("player_destroyed", remove_player)
+	Signals.connect("player_destroyed", restart_scene)
 	
 	# Instantiate Vortex
 	vortex = vortex_scene.instantiate()
@@ -34,9 +35,10 @@ func _ready() -> void:
 	# Spawn initial platforms
 	for n in initial_number_platforms:
 		spawn_platform()
-		
+	
+	first_spawn = false
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+
 func _process(delta: float) -> void:
 	vortex.position.y += (vortex_speed + level / 2) * delta
 	if Input.is_action_just_pressed("Restart"):
@@ -60,32 +62,44 @@ func set_next_position() -> void:
 		while jump_distance > max_jump or jump_distance < max_jump * -1:
 			next_x = previous_platform_position.x + rng.randi_range(5, 8) * random_pos_neg.call()
 			jump_distance = next_x + previous_platform_position.x
-		print(jump_distance)
 		return next_x
 		
 	rng.randomize()
 	previous_platform_position = Vector3(next_platform_position)
 	next_platform_position.y = previous_platform_position.y + offset
 	next_platform_position.x = random_x_pos.call()
-	print("Spawning new platform at: ", next_platform_position)
 
-func remove_player(body) -> void:
-	#body.free()
-	get_tree().reload_current_scene()     
+
+func restart_scene(body) -> void:
+	get_tree().call_deferred("reload_current_scene")     
+
 
 func remove_platform(body) -> void:
-	body.free()
+	body.queue_free()
 	platforms_destroyed += 1
 	if platforms_destroyed / level > 20:
 		level += 1
 		
 	spawn_platform()
 
+
+func spawn_collectable(position: Vector3) -> void:
+	var index = randi_range(0, collectables.size() -1)
+	var collectable = collectables[index].instantiate()
+	
+	collectable.position.y = position.y + 1.5
+	collectable.position.x = position.x + randf_range(-5.0, 5.0)
+
+	add_child(collectable)
+
+
 func spawn_platform() -> void:
-	rng.randomize()
-	var index = rng.randi_range(0, platforms.size() -1)
+	var index = randi_range(0, platforms.size() -1)
 	var platform = platforms[index].instantiate()
 	platform.position = next_platform_position
-
+	
+	if randf_range(0.0, 1.0) < 0.3:
+		spawn_collectable(platform.position)
+	
 	add_child(platform)
 	set_next_position()
