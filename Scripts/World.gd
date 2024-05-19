@@ -18,9 +18,9 @@ var max_jump: int = 25
 var next_platform_position: Vector3 = Vector3(0, 5, 0)
 var previous_platform_position: Vector3
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
-var level: int = 1
 var platforms_destroyed: int = 0;
 var first_spawn: bool = true
+
 
 func _ready() -> void:
 	Signals.connect("platform_destroyed", remove_platform)
@@ -37,16 +37,17 @@ func _ready() -> void:
 		spawn_platform()
 	
 	first_spawn = false
+	get_tree().paused = true
 
 
 func _process(delta: float) -> void:
-	vortex.position.y += (vortex_speed + level / 2) * delta
+	vortex.position.y += vortex_speed * delta
 	if Input.is_action_just_pressed("Restart"):
 		get_tree().reload_current_scene()
-	
-	if get_tree().paused and Input.is_action_just_pressed("Jump"):
-		get_tree().paused = false
 		
+
+func game_start():
+	get_tree().paused = false
 
 func set_next_position() -> void:
 	var random_x_pos = func ():
@@ -77,8 +78,6 @@ func restart_scene(body) -> void:
 func remove_platform(body) -> void:
 	body.queue_free()
 	platforms_destroyed += 1
-	if platforms_destroyed / level > 20:
-		level += 1
 		
 	spawn_platform()
 

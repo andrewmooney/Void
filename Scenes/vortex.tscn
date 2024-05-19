@@ -1,8 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://ydk6nhkfy6tx"]
+[gd_scene load_steps=8 format=3 uid="uid://ydk6nhkfy6tx"]
 
 [ext_resource type="Script" path="res://Scripts/Vortex.gd" id="1_5gjee"]
-[ext_resource type="Shader" uid="uid://b3ofm554x2r4f" path="res://Scenes/bhole.tres" id="2_y6m1j"]
-[ext_resource type="Shader" uid="uid://co4400oc2wqy3" path="res://Scenes/vortex.tres" id="3_suq7n"]
+[ext_resource type="Shader" uid="uid://b3ofm554x2r4f" path="res://Shaders/bhole.tres" id="2_5khrp"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_nasuf"]
 height = 0.113677
@@ -12,24 +11,15 @@ radius = 2.25252
 height = 0.0826992
 radius = 2.03972
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_26t1q"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1heqy"]
 render_priority = 0
-shader = ExtResource("2_y6m1j")
+shader = ExtResource("2_5khrp")
 shader_parameter/Colour_Intensity = 7.0
-shader_parameter/Polar_Colour = Color(0.142355, 0.600341, 0.780071, 1)
-shader_parameter/Speed_X_Y = Vector2(0.5, 0.2)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_oyray"]
-render_priority = 0
-next_pass = SubResource("ShaderMaterial_26t1q")
-shader = ExtResource("3_suq7n")
-shader_parameter/ColorParameter = null
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bok5d"]
-albedo_color = Color(0, 0, 0, 1)
+shader_parameter/Polar_Colour = Color(0.571414, 0.276472, 0.108959, 1)
+shader_parameter/Speed_X_Y = Vector2(0.5, 0.001)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_olu5u"]
-material = SubResource("StandardMaterial3D_bok5d")
+material = SubResource("ShaderMaterial_1heqy")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_fgbcf"]
 radius = 2.4293
@@ -60,7 +50,6 @@ shape = SubResource("CylinderShape3D_shtb4")
 
 [node name="Vortex" type="MeshInstance3D" parent="VFXBlackHole"]
 transform = Transform3D(2.28911, 0, 0, 0, 1, 0, 0, 0, 2.2375, 0, 0, 0)
-material_override = SubResource("ShaderMaterial_oyray")
 mesh = SubResource("PlaneMesh_olu5u")
 skeleton = NodePath("../../..")
 

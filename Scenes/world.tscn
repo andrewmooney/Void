@@ -1,22 +1,152 @@
-[gd_scene load_steps=11 format=3 uid="uid://eri1fla55hog"]
+[gd_scene load_steps=16 format=3 uid="uid://eri1fla55hog"]
 
 [ext_resource type="Script" path="res://Scripts/World.gd" id="1_4xm16"]
 [ext_resource type="Script" path="res://Scripts/CameraTD.gd" id="1_wc6tx"]
 [ext_resource type="PackedScene" uid="uid://qwyh7q4m8426" path="res://Scenes/collectable.tscn" id="3_8548h"]
 [ext_resource type="PackedScene" uid="uid://ydk6nhkfy6tx" path="res://Scenes/vortex.tscn" id="3_n35ef"]
 [ext_resource type="PackedScene" uid="uid://dahx450qvqrmm" path="res://Scenes/platform.tscn" id="4_cdn70"]
+[ext_resource type="Script" path="res://Scripts/SaveHighScore.gd" id="5_dkp2y"]
 [ext_resource type="PackedScene" uid="uid://c8afymuw0tn0l" path="res://Scenes/player.tscn" id="5_rh6cb"]
 [ext_resource type="Script" path="res://Scripts/UserInterface.gd" id="6_h6ddv"]
-[ext_resource type="Shader" uid="uid://0dhhei7svxis" path="res://Shaders/dashprogress.tres" id="7_kwjb1"]
+[ext_resource type="FontFile" uid="uid://lvgltbm2fcc2" path="res://Assets/PoetsenOne-Regular.ttf" id="8_ck38o"]
+[ext_resource type="Script" path="res://Scripts/Information.gd" id="8_x7qsi"]
 
 [sub_resource type="Environment" id="Environment_140w6"]
 background_mode = 1
 ambient_light_source = 2
 ambient_light_color = Color(0.363179, 0.3521, 0.330929, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_2ywtf"]
-shader = ExtResource("7_kwjb1")
-shader_parameter/ColorParameter = Color(0, 0.603543, 0.227222, 1)
+[sub_resource type="Animation" id="Animation_ux3wd"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("VBoxContainer:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(593, 800)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("VBoxContainer:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-6.81551]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("VBoxContainer/GetReadyLabel:text")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": ["GET READY!!!"]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("VBoxContainer/GetReadyLabel:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_3sb4q"]
+resource_name = "GetReady"
+length = 4.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("VBoxContainer:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.103684),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(593, 800)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("VBoxContainer:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.103684),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-6.81551]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("VBoxContainer/GetReadyLabel:text")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 2.4, 2.9, 3.4, 3.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": ["GET READY!!!", "3", "2", "1", "GO!!!"]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("VBoxContainer/GetReadyLabel:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4, 4.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [true, false, true, false, true, false, true, false, true, false]
+}
+tracks/4/type = "method"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("..")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(4.5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"game_start"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0ohv7"]
+_data = {
+"GetReady": SubResource("Animation_3sb4q"),
+"RESET": SubResource("Animation_ux3wd")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xpkfa"]
+bg_color = Color(0, 0.491852, 0.878221, 1)
+border_color = Color(0, 0.303653, 0.517915, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 10
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_4xm16")
@@ -24,6 +154,9 @@ platforms = Array[PackedScene]([ExtResource("4_cdn70")])
 collectables = Array[PackedScene]([ExtResource("3_8548h")])
 offset = 2
 vortex_scene = ExtResource("3_n35ef")
+
+[node name="SaveHighScore" type="Node3D" parent="."]
+script = ExtResource("5_dkp2y")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_140w6")
@@ -42,52 +175,114 @@ script = ExtResource("1_wc6tx")
 
 [node name="Player" parent="." instance=ExtResource("5_rh6cb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
-debug = false
 
-[node name="UserInterface" type="Control" parent="." node_paths=PackedStringArray("score_label", "jump_label", "dash_progress", "timer")]
+[node name="Information" type="Control" parent="." node_paths=PackedStringArray("animation_player")]
+process_mode = 3
 layout_mode = 3
-anchors_preset = 10
+anchors_preset = 15
 anchor_right = 1.0
-offset_bottom = 120.0
+anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("8_x7qsi")
+animation_player = NodePath("AnimationPlayer")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Information"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 593.0
+offset_top = 800.0
+offset_right = 1455.0
+offset_bottom = 980.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -6.81551
+
+[node name="GetReadyLabel" type="Label" parent="Information/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("8_ck38o")
+theme_override_font_sizes/font_size = 150
+text = "GET READY!!!"
+horizontal_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Information"]
+libraries = {
+"": SubResource("AnimationLibrary_0ohv7")
+}
+
+[node name="UserInterface" type="Control" parent="." node_paths=PackedStringArray("score_label", "high_score_label", "jump_label", "dash_progress", "timer")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_vertical = 3
 script = ExtResource("6_h6ddv")
 score_label = NodePath("HBoxContainer/ScoreLabel")
+high_score_label = NodePath("HBoxContainer/HScoreLabel")
 jump_label = NodePath("HBoxContainer/JumpEnabled")
 dash_progress = NodePath("HBoxContainer/DashProgressBar")
 timer = NodePath("Timer")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UserInterface"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -430.5
+offset_right = 430.5
+offset_bottom = 50.0
 grow_horizontal = 2
-grow_vertical = 2
+theme_override_constants/separation = 10
 
 [node name="ScoreLabel" type="RichTextLabel" parent="UserInterface/HBoxContainer"]
 custom_minimum_size = Vector2(150, 50)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
+theme_override_fonts/normal_font = ExtResource("8_ck38o")
+theme_override_font_sizes/normal_font_size = 25
 text = "Score:  0"
 fit_content = true
+
+[node name="HScoreLabel" type="Label" parent="UserInterface/HBoxContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_fonts/font = ExtResource("8_ck38o")
+theme_override_font_sizes/font_size = 25
+text = "High Score: 0"
 
 [node name="Boost" type="Label" parent="UserInterface/HBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
-text = "Boost"
+theme_override_fonts/font = ExtResource("8_ck38o")
+theme_override_font_sizes/font_size = 25
+text = "Boost: "
 
 [node name="DashProgressBar" type="ProgressBar" parent="UserInterface/HBoxContainer"]
-material = SubResource("ShaderMaterial_2ywtf")
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.914448, 0.627389, 0, 1)
+theme_override_colors/font_outline_color = Color(0.689381, 0.604185, 0.0904853, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("8_ck38o")
+theme_override_font_sizes/font_size = 25
+theme_override_styles/fill = SubResource("StyleBoxFlat_xpkfa")
 rounded = true
 
 [node name="JumpEnabled" type="RichTextLabel" parent="UserInterface/HBoxContainer"]
-custom_minimum_size = Vector2(200, 50)
+custom_minimum_size = Vector2(300, 50)
 layout_mode = 2
+size_flags_horizontal = 8
 size_flags_vertical = 0
+theme_override_fonts/normal_font = ExtResource("8_ck38o")
+theme_override_font_sizes/normal_font_size = 25
 text = "Double Jump Active"
 
 [node name="Timer" type="Timer" parent="UserInterface"]

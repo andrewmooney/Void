@@ -11,10 +11,6 @@ func _ready() -> void:
 	lock_rotation = true
 	freeze = true
 	gravity_scale = 1
-	
-	
-func _process(delta: float) -> void:
-	pass
 
 
 func collide_with():

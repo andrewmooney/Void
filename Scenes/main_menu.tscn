@@ -1,0 +1,85 @@
+[gd_scene load_steps=7 format=3 uid="uid://s0gwvqvqbj8g"]
+
+[ext_resource type="Script" path="res://Scripts/main_menu.gd" id="1_5eh1p"]
+[ext_resource type="FontFile" uid="uid://lvgltbm2fcc2" path="res://Assets/PoetsenOne-Regular.ttf" id="1_muhsh"]
+
+[sub_resource type="Gradient" id="Gradient_8q6o7"]
+offsets = PackedFloat32Array(0, 0.544469)
+colors = PackedColorArray(0.942863, 0.464113, 0.181091, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_4r2ki"]
+gradient = SubResource("Gradient_8q6o7")
+
+[sub_resource type="LabelSettings" id="LabelSettings_gkehd"]
+font = ExtResource("1_muhsh")
+font_size = 200
+font_color = Color(0, 0, 0, 1)
+outline_size = 50
+outline_color = Color(0, 0.589148, 0.880013, 1)
+
+[sub_resource type="Theme" id="Theme_nivu2"]
+default_font = ExtResource("1_muhsh")
+default_font_size = 75
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5eh1p")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture1D_4r2ki")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="EndlessVoid" type="Label" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "Endless Void"
+label_settings = SubResource("LabelSettings_gkehd")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Play" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_muhsh")
+theme_override_font_sizes/font_size = 100
+text = "Play"
+
+[node name="Quit" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+theme = SubResource("Theme_nivu2")
+text = "Quit
+"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]

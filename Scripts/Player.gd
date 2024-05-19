@@ -4,9 +4,6 @@ extends CharacterBody3D
 const dash_energy_max: float = 100.0
 var jump_velocity: float = 5.0
 
-@export var debug: bool = false
-@export var freelook: bool = false
-
 var speed: float = 5.0
 
 var dash_energy: float = 100.0
@@ -20,6 +17,7 @@ var double_jump: bool = true
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready() -> void:
+	
 	Signals.connect("item_collected", new_item_collected)
 
 func _physics_process(delta: float) -> void:
@@ -32,16 +30,16 @@ func _physics_process(delta: float) -> void:
 	dash_recharge()
 	
 	process_input(delta)
-	
-	if debug:
-		test_input()
-		
-	
 
 	move_and_slide()
 
+
 func process_input(delta: float) -> void:
-	# Handle jump.
+	
+	if Input.is_action_just_pressed("Menu"):
+		queue_free()
+		get_tree().call_deferred("change_scene_to_file", "res://Scenes/main_menu.tscn")
+	
 	if Input.is_action_just_pressed("Jump"):
 		if is_on_floor():
 			double_jump = true
@@ -50,7 +48,7 @@ func process_input(delta: float) -> void:
 			velocity.y = jump_velocity
 			double_jump = false
 	
-	var input_dir := Input.get_vector("Left", "Right", "Forward", "Backwards")
+	var input_dir := Input.get_vector("Left", "Right", "Forward", "Backward")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	direction = direction.rotated(Vector3.UP, spring_arm.rotation.y)
 	
@@ -64,22 +62,19 @@ func process_input(delta: float) -> void:
 		
 	if direction:
 		velocity.x = direction.x * speed
-		if freelook:
-			velocity.z = direction.z * speed
+
 	else:
 		velocity.x = move_toward(velocity.x, 0, speed)
-		if freelook:
-			velocity.z = move_toward(velocity.z, 0, speed)
-	
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and freelook:
-		spring_arm.rotation.x += event.relative.y * -0.005
-		spring_arm.rotation.y -= event.relative.x * 0.005
 		
 func new_item_collected(type: String) -> void:
 	if type == "jump_fuel":
 		double_jump = true
-		dash_energy = 100.0
+		if dash_energy < 90.0:
+			dash_energy += 10.0
+		
+		if dash_energy > 90.0:
+			dash_energy = 100.0
+
 
 func dash_recharge() -> void:
 	Signals.emit_signal("dash_energy_level", dash_energy)
@@ -91,7 +86,3 @@ func dash_recharge() -> void:
 		if dash_energy >= dash_energy_max:
 			dash_energy = clampf(dash_energy, 0, dash_energy_max)
 			dash_enabled = true
-			
-func test_input():
-	if Input.is_action_just_pressed("Test"):
-		get_node("CollisionShape3D").disabled = true

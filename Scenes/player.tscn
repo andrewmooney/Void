@@ -19,7 +19,6 @@ height = 1.5
 [node name="Player" type="CharacterBody3D" groups=["Player"]]
 collision_mask = 28
 script = ExtResource("1_th1rf")
-debug = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_npj1f")
