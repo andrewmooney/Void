@@ -26,4 +26,4 @@ Menu	   |   Esc	   | Start, Menu
 
 My submission for the Godot Wild - 69 game jam. The theme was "void".
 
-My first game jam and the first mini game I have made.
+### The first game jam and first mini game I made.
