@@ -16,12 +16,13 @@ In addition to the ability to double jump you also have a speed boost. There is 
 You will find blue spinning boxes throughout the level, when collected these boxes will restore your ability to jump and also add 10% to your boost tank. In addition they enable the score multiplier for 5 seconds. This will multiply the number of points gained per platform by 3. This is cumulative so the more boxes you collect the bigger the multiplier. Each time a box is collected the timer is reset.
 
 ## Controls.
-Movement	Keyboard	Controller
-Left	    W	       Left Stick - Left
-Right	   S	       Left Stick - Right
-Jump	    Space	   Bottom Action (Xbox A, Sony X)
-Boost	   Shift	   Right Trigger
-Menu	    Esc	     Start, Menu
+Movement |	Keyboard | Controller |
+---------|-----------|------------|
+Left	   |   W       | Left Stick - Left
+Right	   |   S	     | Left Stick - Right
+Jump	   |   Space	 | Bottom Action (Xbox A, Sony X)
+Boost	   |   Shift	 | Right Trigger
+Menu	   |   Esc	   | Start, Menu
 
 My submission for the Godot Wild - 69 game jam. The theme was "void".
 
